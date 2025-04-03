@@ -1,13 +1,21 @@
 package highFive.calendar.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import highFive.calendar.dto.ApiResponse;
 import highFive.calendar.dto.UserDto;
 import highFive.calendar.dto.UserMapper;
 import highFive.calendar.entity.User;
 import highFive.calendar.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -15,6 +23,11 @@ public class UserController implements UserMapper {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/")
+    public ResponseEntity<String> home() {
+        return ResponseEntity.ok("서버가 정상적으로 실행되었습니다.");
+    }
 
     //  회원가입
     @PostMapping("/register")
@@ -55,7 +68,7 @@ public class UserController implements UserMapper {
 
     //  프로필 수정
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable(name = "userId") Long userId, @RequestBody UserDto userDto) {
         // DTO에서 엔티티로 변환 후, URL의 userId를 강제 세팅
         User user = dtoToEntity(userDto);
         user.setUserId(userId);
@@ -64,7 +77,7 @@ public class UserController implements UserMapper {
     }
     //  회원 탈퇴
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "userId") Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
