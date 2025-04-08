@@ -17,6 +17,8 @@ import highFive.calendar.dto.UserMapper;
 import highFive.calendar.entity.User;
 import highFive.calendar.service.UserService;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController implements UserMapper {
@@ -64,6 +66,13 @@ public class UserController implements UserMapper {
                             .build();
                     return ResponseEntity.status(401).body(response);
                 });
+    }
+
+    //  프로필 조회
+    @GetMapping("/{userId}")
+    public ResponseEntity<Optional<User>> findById(@PathVariable(name="userId") Long userId) {
+        Optional<User> userDto = userService.findById(userId);
+        return ResponseEntity.ok(userDto);
     }
 
     //  프로필 수정
